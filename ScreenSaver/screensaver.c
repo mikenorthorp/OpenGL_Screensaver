@@ -37,6 +37,7 @@ float windowWidth  = 640.0;
 
 // Interporlation variable
 float interp = 0.0f;
+float sparkleInterp = 0.0f;
 int interpFlip = 0;
 
 // Defines a point with x and y coordinate
@@ -47,6 +48,12 @@ float buttonHeight = 0.2f;
 
 // Sparkle coordinate
 x_y_coord sparkleCoord = {0.0f, 0.0f};
+
+int currentPoint = 0;
+int goingToPoint = 1;
+
+x_y_coord morphingCoords[] = {{0.0f, 0.0f}, {0.0f, 0.0f}};
+x_y_coord nonMorphingCoords[] = {{0.0f, 0.0f}, {0.0f, 0.0f}};
 
 // Button x,y coordinates for 4 buttons for top right corner of buttons
 x_y_coord buttons[] = {{-0.7f, -0.6f}, {-0.3f, -0.6f}, {0.1f, -0.6f}, {0.5f, -0.6f}};
@@ -74,6 +81,25 @@ x_y_coord right_half_n[] = {{0.26f, -0.3f}, // Vertex 1
 {0.06f, -0.1f}, // Vertex 5
 {0.06f, 0.5f}, // Vertex 6
 {0.26f, 0.5f}}; // Vertex 7
+
+// First half of shape
+x_y_coord first_half_coords[] = {{-0.5f, 0.5f}, // Vertex 1
+{-0.3f, 0.5f}, // Vertex 2
+{-0.1f, 0.2f}, // Vertex 3
+{-0.1f, -0.1f}, // Vertex 4
+{-0.3f, 0.18f}, // Vertext 5
+{-0.3f, -0.3f}, // Vertex 6
+{-0.5f, -0.3f}}; // Vertex 7
+
+// Second half of shape
+x_y_coord second_half_coords[] = {{0.26f, -0.3f}, // Vertex 1
+{0.06f, -0.3f}, // Vertex 2
+{-0.1f, -0.1f}, // Vertex 3
+{-0.1f, 0.2f}, // Vertex 4
+{0.06f, -0.1f}, // Vertex 5
+{0.06f, 0.5f}, // Vertex 6
+{0.26f, 0.5f}}; // Vertex 7
+
 
 // Coordinates for left and right side of star
 // Left half of star
@@ -183,6 +209,27 @@ void drawButtons(void) {
 			// Set color to RED
 			glColor3f(0, 0, 1);
 
+
+			// Recolor if pressed
+			if(morphButtonPressed && i == 0) {
+				glColor3f(1,0,0);
+			}
+
+			// Recolor if pressed
+			if(sparkleButtonPressed && i == 1) {
+				glColor3f(1,0,0);
+			}
+
+			// Recolor if pressed
+			if(sparksButtonPresssed && i == 2) {
+				glColor3f(1,0,0);
+			}
+
+			// Recolor if pressed
+			if(bonusButtonPressed && i == 3) {
+				glColor3f(1,0,0);
+			}
+
 			// Draws each button, 4 corners
 			glVertex2f(buttons[i][0], buttons[i][1]);
 			glVertex2f(buttons[i][0]+buttonWidth, buttons[i][1]);
@@ -281,22 +328,38 @@ void morphLetter(void) {
 			{
 				case 0:
 					glVertex2f((1-interp) * left_half_n[1][0] + interp * left_half_star[i][0], (1-interp) * left_half_n[1][1] + interp * left_half_star[i][1]);
+					first_half_coords[1][0] = (1-interp) * left_half_n[1][0] + interp * left_half_star[i][0];
+					first_half_coords[1][1] = (1-interp) * left_half_n[1][1] + interp * left_half_star[i][1];
 					break;
 				case 1:
 					glVertex2f((1-interp) * left_half_n[0][0] + interp * left_half_star[i][0], (1-interp) * left_half_n[0][1] + interp * left_half_star[i][1]);
+					first_half_coords[0][0] = (1-interp) * left_half_n[0][0] + interp * left_half_star[i][0];
+					first_half_coords[0][1] = (1-interp) * left_half_n[0][1] + interp * left_half_star[i][1];
 					break;
 				case 2:
 					glVertex2f((1-interp) * left_half_n[6][0] + interp * left_half_star[i][0], (1-interp) * left_half_n[6][1] + interp * left_half_star[i][1]);
 					glVertex2f((1-interp) * left_half_n[5][0] + interp * left_half_star[i][0], (1-interp) * left_half_n[5][1] + interp * left_half_star[i][1]);
+
+					first_half_coords[6][0] = (1-interp) * left_half_n[6][0] + interp * left_half_star[i][0];
+					first_half_coords[6][1] = (1-interp) * left_half_n[6][1] + interp * left_half_star[i][1];
+
+					first_half_coords[5][0] = (1-interp) * left_half_n[5][0] + interp * left_half_star[i][0];
+					first_half_coords[5][1] = (1-interp) * left_half_n[5][1] + interp * left_half_star[i][1];
 					break;
 				case 3:
 					glVertex2f((1-interp) * left_half_n[4][0] + interp * left_half_star[i][0], (1-interp) * left_half_n[4][1] + interp * left_half_star[i][1]);
+					first_half_coords[4][0] = (1-interp) * left_half_n[4][0] + interp * left_half_star[i][0];
+					first_half_coords[4][1] = (1-interp) * left_half_n[4][1] + interp * left_half_star[i][1];
 					break;
 				case 4:
 					glVertex2f((1-interp) * left_half_n[3][0] + interp * left_half_star[i][0], (1-interp) * left_half_n[3][1] + interp * left_half_star[i][1]);
+					first_half_coords[3][0] = (1-interp) * left_half_n[3][0] + interp * left_half_star[i][0];
+					first_half_coords[3][1] = (1-interp) * left_half_n[3][1] + interp * left_half_star[i][1];
 					break;
 				case 5:
 					glVertex2f((1-interp) * left_half_n[2][0] + interp * left_half_star[i][0], (1-interp) * left_half_n[2][1] + interp * left_half_star[i][1]);
+					first_half_coords[2][0] = (1-interp) * left_half_n[2][0] + interp * left_half_star[i][0];
+					first_half_coords[2][1] = (1-interp) * left_half_n[2][1] + interp * left_half_star[i][1];
 					break;
 				default :
 					break;
@@ -358,6 +421,17 @@ void myIdle(void)
 		interp -= 0.003f;
 	}
 
+	// Increase sparkle interpolation variable
+	sparkleInterp += 0.005f;
+
+	if (sparkleInterp >= 1.0) {
+
+		// Set current point
+		//currentPoint = goingToPoint;
+		// Reset sparkle Interp to 0
+		sparkleInterp = 0.0f;
+	}
+
 	// Flips the interp to subtract or add, depending on the part of the morph it is in
 	if (interp >= 1.0) {
 		interpFlip = 1;
@@ -365,9 +439,54 @@ void myIdle(void)
 		interpFlip = 0;
 	}
 
-	// Calculate sparkle coordinates starting position on N
-	sparkleCoord[0] = left_half_n[0][0];
-	sparkleCoord[1] = left_half_n[0][1];
+	if(morphButtonPressed) {
+		sparkleCoord[0] = first_half_coords[0][0];
+		sparkleCoord[1] = first_half_coords[0][1];
+	} else {
+		switch(currentPoint) {
+			// Currently coming from point 1
+			case 0:
+				goingToPoint = 1;
+
+				// Coords for when not morphing
+				// X and Y coord starting point
+				nonMorphingCoords[0][0] = left_half_n[0][0];
+				nonMorphingCoords[0][1] = left_half_n[0][1];
+				// X and Y coord end point
+				nonMorphingCoords[1][0] = left_half_n[1][0];
+				nonMorphingCoords[1][1] = left_half_n[1][1];
+				break;
+			case 1:
+				goingToPoint = 2;
+
+				// Coords for when not morphing
+				// X and Y coord starting point
+				nonMorphingCoords[1][0] = left_half_n[1][0];
+				nonMorphingCoords[1][1] = left_half_n[1][1];
+				// X and Y coord end point
+				nonMorphingCoords[2][0] = left_half_n[2][0];
+				nonMorphingCoords[2][1] = left_half_n[2][1];
+				break;
+			// case 2:
+			// 	goingToPoint = 3;
+
+			// 	// Coords for when not morphing
+			// 	// X and Y coord starting point
+			// 	nonMorphingCoords[2][0] = left_half_n[2][0];
+			// 	nonMorphingCoords[2][1] = left_half_n[2][1];
+			// 	// X and Y coord end point
+			// 	nonMorphingCoords[3][0] = left_half_n[3][0];
+			// 	nonMorphingCoords[3][1] = left_half_n[3][1];
+			// 	break;
+			default:
+				break;
+		}
+
+
+		sparkleCoord[0] = (1-sparkleInterp) * nonMorphingCoords[0][0] + sparkleInterp * nonMorphingCoords[1][0];
+		sparkleCoord[1] = (1-sparkleInterp) * nonMorphingCoords[0][1] + sparkleInterp * nonMorphingCoords[1][1];
+	}
+
 
 
 	// now force OpenGL to redraw the change
@@ -456,32 +575,24 @@ void mouseCheck(void) {
 
 // This performs button stuff depending on if a button is pressed or not
 void buttonLogic(void) {
-		// Draw letter if morph button is pressed and change button
+		// Draw letter if morph button is pressed
 	if(morphButtonPressed) {
-		// Change button color
-
 		// Morph letter
 		morphLetter();
 	}
 
 	if(sparkleButtonPressed) {
-		// Change button color
-
-		// Morph letter
+		// draw sparkle
 		drawSparkle();
 	}
 
 	if(sparksButtonPresssed) {
-		// Change button color
-
-		// Morph letter
-		drawSparkle();
+		// Draw Start
+		drawStar();
 	}
 
 	if(bonusButtonPressed) {
-		// Change button color
-
-		// Morph letter
+		// Do bonus
 		drawStar();
 	}
 }
@@ -508,14 +619,14 @@ void display(void)
 	// Always draw base buttons, but draw over if one is pressed
 	drawButtons();
 
-	// Draw text for buttons
-	drawButtonText();
-
 	// Checks if mouse is pressed
 	mouseCheck();
 
 	// Performs button operations depending on mouse position
 	buttonLogic();
+
+	// Draw text for buttons
+	drawButtonText();
 
 	// send all output to display
 	glutSwapBuffers();
