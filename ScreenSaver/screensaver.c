@@ -17,6 +17,7 @@
 /* Global variables */
 typedef float x_y_coord[2];
 
+// Coordinates for right and left side of N
 // First half of N
 x_y_coord left_half_n[] = {{-0.5f, 0.5f}, // Vertex 1
 {-0.3f, 0.5f}, // Vertex 2
@@ -35,24 +36,22 @@ x_y_coord right_half_n[] = {{0.26f, -0.3f}, // Vertex 1
 {0.06f, 0.5f}, // Vertex 6
 {0.26f, 0.5f}}; // Vertex 7
 
-// Coorinates for left and right side of star
+// Coordinates for left and right side of star
 // Left half of star
-x_y_coord left_half_star[] = {{-0.5f, 0.5f}, // Vertex 1
-{-0.3f, 0.5f}, // Vertex 2
-{-0.1f, 0.2f}, // Vertex 3
-{-0.1f, -0.1f}, // Vertex 4
-{-0.3f, 0.3f}, // Vertext 5
-{-0.3f, -0.3f}, // Vertex 6
-{-0.5f, -0.3f}}; // Vertex 7
+x_y_coord left_half_star[] = {{-0.3f, 0.45f}, // Vertex 1
+{-0.7f, 0.45f}, // Vertex 2
+{-0.33f, 0.2f}, // Vertext 3
+{-0.45f, -0.1f}, // Vertex 4
+{0.0f, 0.15f}, // Vertex 5
+{0.0f, 0.8f}}; // Vertex 6
 
 // Right half of star
-x_y_coord right_half_star[] = {{-0.5f, 0.5f}, // Vertex 1
-{-0.3f, 0.5f}, // Vertex 2
-{-0.1f, 0.2f}, // Vertex 3
-{-0.1f, -0.1f}, // Vertex 4
-{-0.3f, 0.3f}, // Vertext 5
-{-0.3f, -0.3f}, // Vertex 6
-{-0.5f, -0.3f}}; // Vertex 7
+x_y_coord right_half_star[] = {{0.3f, 0.45f}, // Vertex 1
+{0.7f, 0.45f}, // Vertex 2
+{0.33f, 0.2f}, // Vertex 3
+{0.45f, -0.1f}, // Vertex 4
+{0.0f, 0.15f}, // Vertext 5
+{0.0f, 0.8f}}; // Vertex 6
 
 /************************************************************************
 
@@ -76,15 +75,37 @@ void init(void)
 	gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
 }
 
-/************************************************************************
+void drawStar(void) {
+		// Var for loop
+	int i = 0;
 
-	Function:		display
+	// clear the screen
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	// First half of Star
+	glBegin(GL_TRIANGLE_FAN);
+		// Set color to RED
+		glColor3f(0, 1, 0);
+		// First part of triangle fan
+		for(i=0; i<6; i++) {
+			glVertex2f(left_half_star[i][0], left_half_star[i][1]);
+		}
+	glEnd();
 
-	Description:	Draws initial static openGL. Sets up buttons, letter N and menu area
+	// Second half of Star
+	glBegin(GL_TRIANGLE_FAN);
+		// Set color to RED
+		glColor3f(0, 1, 0);
+		// First part of triangle fan
+		for(i=0; i<6; i++) {
+			glVertex2f(right_half_star[i][0], right_half_star[i][1]);
+		}
+	glEnd();
+}
 
-*************************************************************************/
-void display(void)
-{
+
+void drawLetter(void) {
+
 	// Var for loop
 	int i = 0;
 
@@ -111,7 +132,20 @@ void display(void)
 		}
 	glEnd();
 
-	
+}
+
+/************************************************************************
+
+	Function:		display
+
+	Description:	Draws initial static openGL. Sets up buttons, letter N and menu area
+
+*************************************************************************/
+void display(void)
+{
+
+	//drawLetter();
+	drawStar();
 
 	// send all output to display
 	glFlush();
