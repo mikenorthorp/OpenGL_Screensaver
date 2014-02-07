@@ -17,7 +17,7 @@
 /* Global variables */
 
 // Interporlation variable
-float interp = 0.0;
+float interp = 0.0f;
 int interpFlip = 0;
 
 typedef float x_y_coord[2];
@@ -28,7 +28,7 @@ x_y_coord left_half_n[] = {{-0.5f, 0.5f}, // Vertex 1
 {-0.3f, 0.5f}, // Vertex 2
 {-0.1f, 0.2f}, // Vertex 3
 {-0.1f, -0.1f}, // Vertex 4
-{-0.3f, 0.3f}, // Vertext 5
+{-0.3f, 0.18f}, // Vertext 5
 {-0.3f, -0.3f}, // Vertex 6
 {-0.5f, -0.3f}}; // Vertex 7
 
@@ -159,23 +159,23 @@ void drawLetter(void) {
 		switch(i)
 			{
 				case 0:
-					glVertex2f((1-interp) * right_half_n[5][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[5][1] + interp * right_half_star[i][1]);
+					glVertex2f((1-interp) * right_half_n[0][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[0][1] + interp * right_half_star[i][1]);
 					break;
 				case 1:
 					glVertex2f((1-interp) * right_half_n[6][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[6][1] + interp * right_half_star[i][1]);
+					glVertex2f((1-interp) * right_half_n[5][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[5][1] + interp * right_half_star[i][1]);
 					break;
 				case 2:
-					glVertex2f((1-interp) * right_half_n[0][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[0][1] + interp * right_half_star[i][1]);
+					glVertex2f((1-interp) * right_half_n[4][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[4][1] + interp * right_half_star[i][1]);
 					break;
 				case 3:
-					glVertex2f((1-interp) * right_half_n[1][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[1][1] + interp * right_half_star[i][1]);
+					glVertex2f((1-interp) * right_half_n[3][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[3][1] + interp * right_half_star[i][1]);
 					break;
 				case 4:
 					glVertex2f((1-interp) * right_half_n[2][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[2][1] + interp * right_half_star[i][1]);
 					break;
 				case 5:
-					glVertex2f((1-interp) * right_half_n[3][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[3][1] + interp * right_half_star[i][1]);
-					glVertex2f((1-interp) * right_half_n[4][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[4][1] + interp * right_half_star[i][1]);
+					glVertex2f((1-interp) * right_half_n[1][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[1][1] + interp * right_half_star[i][1]);
 					break;
 				default :
 					break;
@@ -191,9 +191,9 @@ void myIdle(void)
 
 	// update the interpolation variable depending on value of the flip variable
 	if (interpFlip == 0) {
-		interp += 0.00005;
+		interp += 0.00005f;
 	} else if (interpFlip == 1) {
-		interp -= 0.00005;
+		interp -= 0.00005f;
 	}
 
 	// Flips the interp to subtract or add, depending on the part of the morph it is in
