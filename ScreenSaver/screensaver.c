@@ -19,11 +19,11 @@
 
 // Mouse variables
 int   mousePressed = 0;
-float mouseX, mouseY;
+float mouseX=0, mouseY=0;
 
 // Window size parameters
-int windowHieght = 640;
-int windowWidth  = 640;
+float windowHieght = 640.0;
+float windowWidth  = 640.0;
 
 // Interporlation variable
 float interp = 0.0f;
@@ -35,8 +35,16 @@ typedef float x_y_coord[2];
 float buttonWidth = 0.3f;
 float buttonHeight = 0.2f;
 
+// Sparkle coordinate
+x_y_coord sparkleCoord = {0.0f, 0.0f};
+
 // Button x,y coordinates for 4 buttons for top right corner of buttons
 x_y_coord buttons[] = {{-0.7f, -0.6f}, {-0.3f, -0.6f}, {0.1f, -0.6f}, {0.5f, -0.6f}};
+
+int morphButtonPressed = 0;
+int sparkleButtonPressed = 0;
+int sparksButtonPresssed = 0;
+int bonusButtonPressed = 0;
 
 // Coordinates for right and left side of N
 // First half of N
@@ -96,6 +104,12 @@ void init(void)
 	gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
 }
 
+// This draws the sparkle
+void drawSparkle(void) {
+	// Center of sparkle is the coordinates given by sparkleCoord
+
+}
+
 void drawButtons(void) {
 	// Var for loop
 	int i = 0;
@@ -122,9 +136,6 @@ void drawStar(void) {
 	// Var for loop
 	int i = 0;
 
-	// clear the screen
-	glClear(GL_COLOR_BUFFER_BIT);
-
 	// First half of Star
 	glBegin(GL_TRIANGLE_FAN);
 		// Set color to RED
@@ -146,19 +157,41 @@ void drawStar(void) {
 	glEnd();
 }
 
-
 void drawLetter(void) {
+	// Var for loop
+	int i = 0;
+
+	// First half of Star
+	glBegin(GL_TRIANGLE_FAN);
+		// Set color to RED
+		glColor3f(0, 1, 1);
+		// First part of triangle fan
+		for(i=0; i<7; i++) {
+			glVertex2f(left_half_n[i][0], left_half_n[i][1]);
+		}
+	glEnd();
+
+	// Second half of Star
+	glBegin(GL_TRIANGLE_FAN);
+		// Set color to RED
+		glColor3f(0, 1, 1);
+		// First part of triangle fan
+		for(i=0; i<7; i++) {
+			glVertex2f(right_half_n[i][0], right_half_n[i][1]);
+		}
+	glEnd();
+}
+
+
+void morphLetter(void) {
 
 	// Var for loop
 	int i = 0;
 
-	// clear the screen
-	glClear(GL_COLOR_BUFFER_BIT);
-
 	// First half of N
 	glBegin(GL_TRIANGLE_FAN);
-		// Set color to RED
-		glColor3f(1, 0, 0);
+		// Set color to Yellow
+		glColor3f(0, 1, 1);
 		// First part of triangle fan
 		for(i=0; i<7; i++) {
 			switch(i)
@@ -190,8 +223,8 @@ void drawLetter(void) {
 
 	// Second half of N
 	glBegin(GL_TRIANGLE_FAN);
-		// Set color to RED
-		glColor3f(1, 0, 0);
+		// Set color to Yellow
+		glColor3f(0, 1, 1);
 		// First part of triangle fan
 		for(i=0; i<7; i++) {
 		switch(i)
@@ -229,9 +262,9 @@ void myIdle(void)
 
 	// update the interpolation variable depending on value of the flip variable
 	if (interpFlip == 0) {
-		interp += 0.00005f;
+		interp += 0.003f;
 	} else if (interpFlip == 1) {
-		interp -= 0.00005f;
+		interp -= 0.003f;
 	}
 
 	// Flips the interp to subtract or add, depending on the part of the morph it is in
@@ -260,12 +293,12 @@ void mouseEventListener(int button, int state, int x, int y)
 		// store that the mouse is pressed
 		mousePressed = 1;
 
-		// convert x from Mouse coordinates to OpenGL coordinates
-		mouseX = (float)x / (float)windowWidth;
+		// We must invert y coordinate first
+		y = windowHieght - (float)y;
 
-		// convert y from Mouse coordinates to OpenGL coordinates
-		mouseY = (float)windowHieght - (float)y;  // first invert mouse
-		mouseY = mouseY / (float)windowHieght;
+		// Normalize mouse position between -1.0 and 1.0
+		mouseX = ((float)x/(windowWidth/2))-1;
+		mouseY = ((float)y/(windowWidth/2))-1;
 
 		// now force OpenGL to redraw the change
 		glutPostRedisplay();
@@ -285,17 +318,96 @@ void mouseEventListener(int button, int state, int x, int y)
 void display(void)
 {
 
-	drawLetter();
+	// clear the screen
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if(!morphButtonPressed) {
+		drawLetter();
+	}
+
+	// Always draw base buttons, but draw over if one is pressed
 	drawButtons();
 
 	// if we have a mouse position
 	if (mousePressed)
 	{
-		// Check to see if a button was clicked
+		mousePressed = 0;
+
+		// Morph button depressed
+		if(mouseX >= buttons[0][0] && mouseX <= (buttons[0][0]+buttonWidth) &&
+		   mouseY <= buttons[0][1] && mouseY >= (buttons[0][1]-buttonHeight) && morphButtonPressed) {
+		   	// This disables the morph and reverts back to the letter N
+			morphButtonPressed = 0;
+		// Morph button is pressed
+		} else if (mouseX >= buttons[0][0] && mouseX <= (buttons[0][0]+buttonWidth) &&
+		   		   mouseY <= buttons[0][1] && mouseY >= (buttons[0][1]-buttonHeight)) {
+			morphButtonPressed = 1;
+			// Reset interp to 0 to make smooth transition
+			interp = 0.0;
+		}
+
+		// Sparkle button depressed
+		if(mouseX >= buttons[1][0] && mouseX <= (buttons[1][0]+buttonWidth) &&
+		   mouseY <= buttons[1][1] && mouseY >= (buttons[1][1]-buttonHeight) && sparkleButtonPressed) {
+			sparkleButtonPressed = 0;
+		// Sparkle button is pressed
+		} else if (mouseX >= buttons[1][0] && mouseX <= (buttons[1][0]+buttonWidth) &&
+		   mouseY <= buttons[1][1] && mouseY >= (buttons[1][1]-buttonHeight)) {
+			sparkleButtonPressed = 1;
+		}
+
+		// Spark button depressed
+		if(mouseX >= buttons[2][0] && mouseX <= (buttons[2][0]+buttonWidth) &&
+		   mouseY <= buttons[2][1] && mouseY >= (buttons[2][1]-buttonHeight) && sparksButtonPresssed) {
+			sparksButtonPresssed = 0;
+		// Sparkle button is pressed
+		} else if (mouseX >= buttons[2][0] && mouseX <= (buttons[2][0]+buttonWidth) &&
+		   mouseY <= buttons[2][1] && mouseY >= (buttons[2][1]-buttonHeight)) {
+			sparksButtonPresssed = 1;
+		}
+
+		// Bonus button depressed
+		if(mouseX >= buttons[3][0] && mouseX <= (buttons[3][0]+buttonWidth) &&
+		   mouseY <= buttons[3][1] && mouseY >= (buttons[3][1]-buttonHeight) && bonusButtonPressed) {
+			bonusButtonPressed = 0;
+		// Bonuse button pressed
+		} else if (mouseX >= buttons[3][0] && mouseX <= (buttons[3][0]+buttonWidth) &&
+		   mouseY <= buttons[3][1] && mouseY >= (buttons[3][1]-buttonHeight)) {
+			bonusButtonPressed = 1;
+		}
+	}
+
+	// Draw letter if morph button is pressed and change button
+	if(morphButtonPressed) {
+		// Change button color
+
+		// Morph letter
+		morphLetter();
+	}
+
+	if(sparkleButtonPressed) {
+		// Change button color
+
+		// Morph letter
+		drawStar();
+	}
+
+	if(sparksButtonPresssed) {
+		// Change button color
+
+		// Morph letter
+		drawStar();
+	}
+
+	if(bonusButtonPressed) {
+		// Change button color
+
+		// Morph letter
+		drawStar();
 	}
 
 	// send all output to display
-	glFlush();
+	glutSwapBuffers();
 }
 
 
@@ -312,11 +424,9 @@ void main(int argc, char** argv)
 	// initialize the toolkit
 	glutInit(&argc, argv);
 	// set display mode
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	// set window size
 	glutInitWindowSize(640,640);
-	// set window position on screen
-	//glutInitWindowPosition(100, 150);
 	// open the screen window
 	glutCreateWindow("Screensaver");
 	// register redraw function
