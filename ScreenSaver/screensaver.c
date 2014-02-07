@@ -14,8 +14,18 @@
 
 // Freeglut header
 #include <GL\freeglut.h>
+#include <math.h>
 
 /* Global variables */
+
+//  Ratio of the circumference to the diameter of a circle
+#define PI 3.14159265
+
+// Conversion multiplier for converting from degrees to Radians
+#define DEG_TO_RAD PI/180.0
+
+// angle of rotation
+float theta = 0.0;
 
 // Mouse variables
 int   mousePressed = 0;
@@ -107,7 +117,34 @@ void init(void)
 // This draws the sparkle
 void drawSparkle(void) {
 	// Center of sparkle is the coordinates given by sparkleCoord
+	// Draw the Lines of sparkle
+	glBegin(GL_LINES);
+		glColor3f(1, 1, 0);
+		// Need to convert to radians for cos and sin
+		glVertex2f( cos(DEG_TO_RAD * theta),         sin(DEG_TO_RAD * theta));
+		glVertex2f( cos(DEG_TO_RAD * (theta + 180)), sin(DEG_TO_RAD * (theta + 180)));
+	glEnd();
 
+	glBegin(GL_LINES);
+		glColor3f(1, 1, 0);
+		// Need to convert to radians for cos and sin
+		glVertex2f( cos(DEG_TO_RAD * (theta + 90)),  sin(DEG_TO_RAD * (theta + 90)));
+		glVertex2f( cos(DEG_TO_RAD * (theta + 270)), sin(DEG_TO_RAD * (theta + 270)));
+	glEnd();
+
+	glBegin(GL_LINES);
+		glColor3f(1, 1, 0);
+		// Need to convert to radians for cos and sin
+		glVertex2f( cos(DEG_TO_RAD * (theta + 45)),  sin(DEG_TO_RAD * (theta + 45)));
+		glVertex2f( cos(DEG_TO_RAD * (theta + 225)),  sin(DEG_TO_RAD * (theta + 225)));
+	glEnd();
+
+	glBegin(GL_LINES);
+		glColor3f(1, 1, 0);
+		// Need to convert to radians for cos and sin
+		glVertex2f( cos(DEG_TO_RAD * (theta + 135)),  sin(DEG_TO_RAD * (theta + 135)));
+		glVertex2f( cos(DEG_TO_RAD * (theta + 315)),  sin(DEG_TO_RAD * (theta + 315)));
+	glEnd();
 }
 
 void drawButtons(void) {
@@ -126,10 +163,28 @@ void drawButtons(void) {
 			glVertex2f(buttons[i][0]+buttonWidth, buttons[i][1]-buttonHeight);
 			glVertex2f(buttons[i][0], buttons[i][1]-buttonHeight);
 
-			//TODO Add bitmap text
-
+			glColor3f(0, 1, 1);
 		glEnd();
 	}
+}
+
+void drawButtonText(void) {
+	glColor3f(1, 0, 1);
+	// Morph button
+	glRasterPos3f(buttons[0][0]+0.02 , buttons[0][1]-0.12 ,0.0f);
+	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "MORPH" );
+
+	// Sparkle
+	glRasterPos3f(buttons[1][0]+0.02 , buttons[1][1]-0.12 ,0.0f);
+	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "SPARKLE" );
+
+	// Sparks
+	glRasterPos3f(buttons[2][0]+0.02 , buttons[2][1]-0.12 ,0.0f);
+	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "SPARKS" );
+
+	// Bonus
+	glRasterPos3f(buttons[3][0]+0.02 , buttons[3][1]-0.12 ,0.0f);
+	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "BONUS" );
 }
 
 void drawStar(void) {
@@ -260,6 +315,14 @@ void morphLetter(void) {
 void myIdle(void)
 {
 
+	// update the angle of rotation
+	theta += 0.4f;
+
+	// if we have done a full turn, start at zero again
+	if (theta >= 360.0f) {
+		theta -= 360.0f;
+	}
+
 	// update the interpolation variable depending on value of the flip variable
 	if (interpFlip == 0) {
 		interp += 0.003f;
@@ -328,6 +391,9 @@ void display(void)
 	// Always draw base buttons, but draw over if one is pressed
 	drawButtons();
 
+	// Draw text for buttons
+	drawButtonText();
+
 	// if we have a mouse position
 	if (mousePressed)
 	{
@@ -389,14 +455,14 @@ void display(void)
 		// Change button color
 
 		// Morph letter
-		drawStar();
+		drawSparkle();
 	}
 
 	if(sparksButtonPresssed) {
 		// Change button color
 
 		// Morph letter
-		drawStar();
+		drawSparkle();
 	}
 
 	if(bonusButtonPressed) {
