@@ -49,15 +49,13 @@ float buttonHeight = 0.2f;
 // Sparkle coordinate
 x_y_coord sparkleCoord = {0.0f, 0.0f};
 
+// Set the current vertex and next vertex for interpolation of sparkle
 int currentPoint = 0;
-int goingToPoint = 1;
+int goingToPoint = 0;
 
 // Scale to grow and shrink
 float scale = 0.0f;
 int scaleFlip = 0;
-
-x_y_coord morphingCoords[] = {{0.0f, 0.0f}, {0.0f, 0.0f}};
-x_y_coord nonMorphingCoords[] = {{0.0f, 0.0f}, {0.0f, 0.0f}};
 
 // Button x,y coordinates for 4 buttons for top right corner of buttons
 x_y_coord buttons[] = {{-0.7f, -0.6f}, {-0.3f, -0.6f}, {0.1f, -0.6f}, {0.5f, -0.6f}};
@@ -341,6 +339,13 @@ void morphLetter(void) {
 	// Var for loop
 	int i = 0;
 
+	// Morphs or draws letter depending if button is pressed
+	// This allows us to get the vertex no matter what and store it in the first_half_coors
+	// and second_half_coords
+	if (!morphButtonPressed) {
+		interp = 0.0;
+	}
+
 	// First half of N
 	glBegin(GL_TRIANGLE_FAN);
 		// Set color to Yellow
@@ -422,7 +427,6 @@ void morphLetter(void) {
 			}
 		}
 	glEnd();
-
 }
 
 // Runs when program is idle
@@ -476,55 +480,9 @@ void myIdle(void)
 		interpFlip = 0;
 	}
 
-	if(morphButtonPressed) {
-		sparkleCoord[0] = first_half_coords[0][0];
-		sparkleCoord[1] = first_half_coords[0][1];
-	} else {
-		switch(currentPoint) {
-			// Currently coming from point 1
-			case 0:
-				goingToPoint = 1;
-
-				// Coords for when not morphing
-				// X and Y coord starting point
-				nonMorphingCoords[0][0] = left_half_n[0][0];
-				nonMorphingCoords[0][1] = left_half_n[0][1];
-				// X and Y coord end point
-				nonMorphingCoords[1][0] = left_half_n[1][0];
-				nonMorphingCoords[1][1] = left_half_n[1][1];
-				break;
-			case 1:
-				goingToPoint = 2;
-
-				// Coords for when not morphing
-				// X and Y coord starting point
-				nonMorphingCoords[1][0] = left_half_n[1][0];
-				nonMorphingCoords[1][1] = left_half_n[1][1];
-				// X and Y coord end point
-				nonMorphingCoords[2][0] = left_half_n[2][0];
-				nonMorphingCoords[2][1] = left_half_n[2][1];
-				break;
-			// case 2:
-			// 	goingToPoint = 3;
-
-			// 	// Coords for when not morphing
-			// 	// X and Y coord starting point
-			// 	nonMorphingCoords[2][0] = left_half_n[2][0];
-			// 	nonMorphingCoords[2][1] = left_half_n[2][1];
-			// 	// X and Y coord end point
-			// 	nonMorphingCoords[3][0] = left_half_n[3][0];
-			// 	nonMorphingCoords[3][1] = left_half_n[3][1];
-			// 	break;
-			default:
-				break;
-		}
-
-
-		sparkleCoord[0] = (1-sparkleInterp) * nonMorphingCoords[0][0] + sparkleInterp * nonMorphingCoords[1][0];
-		sparkleCoord[1] = (1-sparkleInterp) * nonMorphingCoords[0][1] + sparkleInterp * nonMorphingCoords[1][1];
-	}
-
-
+	// Calculate current position of sparkle
+	sparkleCoord[0] = (1-sparkleInterp) * first_half_coords[0][0] + sparkleInterp * first_half_coords[1][0];
+	sparkleCoord[1] = (1-sparkleInterp) * first_half_coords[0][1] + sparkleInterp * first_half_coords[1][1];
 
 	// now force OpenGL to redraw the change
 	glutPostRedisplay();
@@ -612,12 +570,6 @@ void mouseCheck(void) {
 
 // This performs button stuff depending on if a button is pressed or not
 void buttonLogic(void) {
-		// Draw letter if morph button is pressed
-	if(morphButtonPressed) {
-		// Morph letter
-		morphLetter();
-	}
-
 	if(sparkleButtonPressed) {
 		// draw sparkle
 		drawSparkle();
@@ -648,10 +600,8 @@ void display(void)
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	// Only draw letter if morph button is not pressed
-	if(!morphButtonPressed) {
-		drawLetter();
-	}
+	// Morphs the letter if button pressed, else stays as N
+	morphLetter();
 
 	// Always draw base buttons, but draw over if one is pressed
 	drawButtons();
