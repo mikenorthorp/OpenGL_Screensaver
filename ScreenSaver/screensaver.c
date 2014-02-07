@@ -19,10 +19,10 @@
 /* Global variables */
 
 //  Ratio of the circumference to the diameter of a circle
-#define PI 3.14159265
+#define PI 3.14159265f
 
 // Conversion multiplier for converting from degrees to Radians
-#define DEG_TO_RAD PI/180.0
+#define DEG_TO_RAD PI/180.0f
 
 // angle of rotation
 float theta = 0.0;
@@ -118,39 +118,65 @@ void init(void)
 void drawSparkle(void) {
 	// Center of sparkle is the coordinates given by sparkleCoord
 	// Draw the Lines of sparkle
+	// Push the matrix
+	glPushMatrix();
+
+	// Set the color to yellow
+	glColor3f(1, 1, 0);
+
+	// The position of the current center to the sparkleCoord
+	glTranslatef(sparkleCoord[0], sparkleCoord[1], 0.0);
+	// Rotate along Z
+	glRotatef(theta, 0.0, 0.0, 1.0);
 	glBegin(GL_LINES);
-		glColor3f(1, 1, 0);
-		// Need to convert to radians for cos and sin
-		glVertex2f( cos(DEG_TO_RAD * theta),         sin(DEG_TO_RAD * theta));
-		glVertex2f( cos(DEG_TO_RAD * (theta + 180)), sin(DEG_TO_RAD * (theta + 180)));
+		glVertex3f(-0.1, 0.0, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glColor3f(1, 1, 0);
-		// Need to convert to radians for cos and sin
-		glVertex2f( cos(DEG_TO_RAD * (theta + 90)),  sin(DEG_TO_RAD * (theta + 90)));
-		glVertex2f( cos(DEG_TO_RAD * (theta + 270)), sin(DEG_TO_RAD * (theta + 270)));
+		glVertex3f(0.1, 0.0, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glColor3f(1, 1, 0);
-		// Need to convert to radians for cos and sin
-		glVertex2f( cos(DEG_TO_RAD * (theta + 45)),  sin(DEG_TO_RAD * (theta + 45)));
-		glVertex2f( cos(DEG_TO_RAD * (theta + 225)),  sin(DEG_TO_RAD * (theta + 225)));
+		glVertex3f(0.0, 0.1, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glColor3f(1, 1, 0);
-		// Need to convert to radians for cos and sin
-		glVertex2f( cos(DEG_TO_RAD * (theta + 135)),  sin(DEG_TO_RAD * (theta + 135)));
-		glVertex2f( cos(DEG_TO_RAD * (theta + 315)),  sin(DEG_TO_RAD * (theta + 315)));
+		glVertex3f(0.0, -0.1, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
+
+	glBegin(GL_LINES);
+		glVertex3f(-0.05, -0.05, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);
+	glEnd();
+
+	glBegin(GL_LINES);
+		glVertex3f(0.05, 0.05, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);
+	glEnd();
+
+	glBegin(GL_LINES);
+		glVertex3f(-0.05, 0.05, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);
+	glEnd();
+
+	glBegin(GL_LINES);
+		glVertex3f(0.05, -0.05, 0.0);
+		glVertex3f(0.0, 0.0, 0.0);
+	glEnd();
+
+	// Pop off the matrix
+	glPopMatrix();
 }
 
 void drawButtons(void) {
 	// Var for loop
 	int i = 0;
 
+	// Loop through to draw all 4 buttons
 	for(i=0;i<4;i++) {
 		// Begin button drawing
 		glBegin(GL_POLYGON);
@@ -163,6 +189,7 @@ void drawButtons(void) {
 			glVertex2f(buttons[i][0]+buttonWidth, buttons[i][1]-buttonHeight);
 			glVertex2f(buttons[i][0], buttons[i][1]-buttonHeight);
 
+			// Set color to blue
 			glColor3f(0, 1, 1);
 		glEnd();
 	}
@@ -172,19 +199,19 @@ void drawButtons(void) {
 void drawButtonText(void) {
 	glColor3f(1, 0, 1);
 	// Morph button
-	glRasterPos3f(buttons[0][0]+0.02 , buttons[0][1]-0.12 ,0.0f);
+	glRasterPos3f(buttons[0][0]+0.02f , buttons[0][1]-0.12f ,0.0f);
 	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "MORPH" );
 
 	// Sparkle
-	glRasterPos3f(buttons[1][0]+0.02 , buttons[1][1]-0.12 ,0.0f);
+	glRasterPos3f(buttons[1][0]+0.02f , buttons[1][1]-0.12f ,0.0f);
 	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "SPARKLE" );
 
 	// Sparks
-	glRasterPos3f(buttons[2][0]+0.02 , buttons[2][1]-0.12 ,0.0f);
+	glRasterPos3f(buttons[2][0]+0.02f , buttons[2][1]-0.12f ,0.0f);
 	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "SPARKS" );
 
 	// Bonus
-	glRasterPos3f(buttons[3][0]+0.02 , buttons[3][1]-0.12 ,0.0f);
+	glRasterPos3f(buttons[3][0]+0.02f , buttons[3][1]-0.12f ,0.0f);
 	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "BONUS" );
 }
 
@@ -317,7 +344,7 @@ void myIdle(void)
 {
 
 	// update the angle of rotation
-	theta += 0.4f;
+	theta += 2.0f;
 
 	// if we have done a full turn, start at zero again
 	if (theta >= 360.0f) {
@@ -337,6 +364,11 @@ void myIdle(void)
 	} else if (interp <= 0.0 && interpFlip != 0) {
 		interpFlip = 0;
 	}
+
+	// Calculate sparkle coordinates starting position on N
+	sparkleCoord[0] = left_half_n[0][0];
+	sparkleCoord[1] = left_half_n[0][1];
+
 
 	// now force OpenGL to redraw the change
 	glutPostRedisplay();
@@ -468,6 +500,7 @@ void display(void)
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	// Only draw letter if morph button is not pressed
 	if(!morphButtonPressed) {
 		drawLetter();
 	}
