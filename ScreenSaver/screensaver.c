@@ -3,9 +3,10 @@
 
 	File: 			screensaver.c
 
-	Description:	An open GL program that displays a screen saver with various functionality
+	Description:	An open GL program that displays a screen saver with various functionality, morphing, sparkles,
+					and bonus effects
 
-	Author:			Michael Northorp (modified the point.c from course website, kept similar structure)
+	Author:			Michael Northorp (modified the point.c from course website as well as other examples)
 
 *************************************************************************************/
 
@@ -16,11 +17,26 @@
 
 /* Global variables */
 
+// Mouse variables
+int   mousePressed = 0;
+float mouseX, mouseY;
+
+// Window size parameters
+int windowHieght = 640;
+int windowWidth  = 640;
+
 // Interporlation variable
 float interp = 0.0f;
 int interpFlip = 0;
 
+// Defines a point with x and y coordinate
 typedef float x_y_coord[2];
+
+float buttonWidth = 0.3f;
+float buttonHeight = 0.2f;
+
+// Button x,y coordinates for 4 buttons for top right corner of buttons
+x_y_coord buttons[] = {{-0.7f, -0.6f}, {-0.3f, -0.6f}, {0.1f, -0.6f}, {0.5f, -0.6f}};
 
 // Coordinates for right and left side of N
 // First half of N
@@ -80,8 +96,30 @@ void init(void)
 	gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
 }
 
+void drawButtons(void) {
+	// Var for loop
+	int i = 0;
+
+	for(i=0;i<4;i++) {
+		// Begin button drawing
+		glBegin(GL_POLYGON);
+			// Set color to RED
+			glColor3f(0, 0, 1);
+
+			// Draws each button, 4 corners
+			glVertex2f(buttons[i][0], buttons[i][1]);
+			glVertex2f(buttons[i][0]+buttonWidth, buttons[i][1]);
+			glVertex2f(buttons[i][0]+buttonWidth, buttons[i][1]-buttonHeight);
+			glVertex2f(buttons[i][0], buttons[i][1]-buttonHeight);
+
+			//TODO Add bitmap text
+
+		glEnd();
+	}
+}
+
 void drawStar(void) {
-		// Var for loop
+	// Var for loop
 	int i = 0;
 
 	// clear the screen
@@ -207,6 +245,35 @@ void myIdle(void)
 	glutPostRedisplay();
 }
 
+/************************************************************************
+
+	Function:		mouseEventListener
+
+	Description:	Listens for position of mouse
+
+*************************************************************************/
+void mouseEventListener(int button, int state, int x, int y)
+{
+	// if the left button is pressed then note the position and force a re-draw
+	if (button==GLUT_LEFT_BUTTON  && state==GLUT_DOWN)
+	{
+		// store that the mouse is pressed
+		mousePressed = 1;
+
+		// convert x from Mouse coordinates to OpenGL coordinates
+		mouseX = (float)x / (float)windowWidth;
+
+		// convert y from Mouse coordinates to OpenGL coordinates
+		mouseY = (float)windowHieght - (float)y;  // first invert mouse
+		mouseY = mouseY / (float)windowHieght;
+
+		// now force OpenGL to redraw the change
+		glutPostRedisplay();
+	}
+
+}
+
+
 
 /************************************************************************
 
@@ -219,6 +286,13 @@ void display(void)
 {
 
 	drawLetter();
+	drawButtons();
+
+	// if we have a mouse position
+	if (mousePressed)
+	{
+		// Check to see if a button was clicked
+	}
 
 	// send all output to display
 	glFlush();
@@ -249,6 +323,8 @@ void main(int argc, char** argv)
 	glutDisplayFunc(display);
 	// register the idle function
 	glutIdleFunc(myIdle);
+	// register mouse function
+	glutMouseFunc(mouseEventListener);
 	//initialize the rendering context
 	init();
 	// go into a perpetual loop
