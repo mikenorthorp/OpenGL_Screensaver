@@ -51,7 +51,7 @@ x_y_coord sparkleCoord = {0.0f, 0.0f};
 
 // Set the current vertex and next vertex for interpolation of sparkle
 int currentPoint = 0;
-int goingToPoint = 0;
+int goingToPoint = 1;
 
 // Scale to grow and shrink
 float scale = 0.0f;
@@ -91,17 +91,14 @@ x_y_coord first_half_coords[] = {{-0.5f, 0.5f}, // Vertex 1
 {-0.1f, -0.1f}, // Vertex 4
 {-0.3f, 0.18f}, // Vertext 5
 {-0.3f, -0.3f}, // Vertex 6
-{-0.5f, -0.3f}}; // Vertex 7
-
-// Second half of shape
-x_y_coord second_half_coords[] = {{0.26f, -0.3f}, // Vertex 1
-{0.06f, -0.3f}, // Vertex 2
-{-0.1f, -0.1f}, // Vertex 3
-{-0.1f, 0.2f}, // Vertex 4
-{0.06f, -0.1f}, // Vertex 5
-{0.06f, 0.5f}, // Vertex 6
-{0.26f, 0.5f}}; // Vertex 7
-
+{-0.5f, -0.3f}, // Vertex 7
+{0.26f, -0.3f}, // Vertex 8
+{0.06f, -0.3f}, // Vertex 9
+{-0.1f, -0.1f}, // Vertex 10
+{-0.1f, 0.2f}, // Vertex 11
+{0.06f, -0.1f}, // Vertex 12
+{0.06f, 0.5f}, // Vertex 13
+{0.26f, 0.5f}}; // Vertex 14
 
 // Coordinates for left and right side of star
 // Left half of star
@@ -405,22 +402,38 @@ void morphLetter(void) {
 			{
 				case 0:
 					glVertex2f((1-interp) * right_half_n[0][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[0][1] + interp * right_half_star[i][1]);
+					first_half_coords[7][0] = (1-interp) * right_half_n[0][0] + interp * right_half_star[i][0];
+					first_half_coords[7][1] = (1-interp) * right_half_n[0][1] + interp * right_half_star[i][1];
 					break;
 				case 1:
 					glVertex2f((1-interp) * right_half_n[6][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[6][1] + interp * right_half_star[i][1]);
 					glVertex2f((1-interp) * right_half_n[5][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[5][1] + interp * right_half_star[i][1]);
+
+					first_half_coords[13][0] = (1-interp) * right_half_n[6][0] + interp * right_half_star[i][0];
+					first_half_coords[13][1] = (1-interp) * right_half_n[6][1] + interp * right_half_star[i][1];
+
+					first_half_coords[12][0] = (1-interp) * right_half_n[5][0] + interp * right_half_star[i][0];
+					first_half_coords[12][1] = (1-interp) * right_half_n[5][1] + interp * right_half_star[i][1];
 					break;
 				case 2:
 					glVertex2f((1-interp) * right_half_n[4][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[4][1] + interp * right_half_star[i][1]);
+					first_half_coords[11][0] = (1-interp) * right_half_n[4][0] + interp * right_half_star[i][0];
+					first_half_coords[11][1] = (1-interp) * right_half_n[4][1] + interp * right_half_star[i][1];
 					break;
 				case 3:
 					glVertex2f((1-interp) * right_half_n[3][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[3][1] + interp * right_half_star[i][1]);
+					first_half_coords[10][0] = (1-interp) * right_half_n[3][0] + interp * right_half_star[i][0];
+					first_half_coords[10][1] = (1-interp) * right_half_n[3][1] + interp * right_half_star[i][1];
 					break;
 				case 4:
 					glVertex2f((1-interp) * right_half_n[2][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[2][1] + interp * right_half_star[i][1]);
+					first_half_coords[9][0] = (1-interp) * right_half_n[2][0] + interp * right_half_star[i][0];
+					first_half_coords[9][1] = (1-interp) * right_half_n[2][1] + interp * right_half_star[i][1];
 					break;
 				case 5:
 					glVertex2f((1-interp) * right_half_n[1][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[1][1] + interp * right_half_star[i][1]);
+					first_half_coords[8][0] = (1-interp) * right_half_n[1][0] + interp * right_half_star[i][0];
+					first_half_coords[8][1] = (1-interp) * right_half_n[1][1] + interp * right_half_star[i][1];
 					break;
 				default :
 					break;
@@ -465,24 +478,75 @@ void myIdle(void)
 	// Increase sparkle interpolation variable
 	sparkleInterp += 0.005f;
 
+	// Checks if the sparkle has reached a new vertice, then swap it for a new one
 	if (sparkleInterp >= 1.0) {
 
-		// Set current point
-		//currentPoint = goingToPoint;
+		// Set current point to the point it is going to, based on the switch statment
+		currentPoint = goingToPoint;
 		// Reset sparkle Interp to 0
 		sparkleInterp = 0.0f;
 	}
 
 	// Flips the interp to subtract or add, depending on the part of the morph it is in
-	if (interp >= 1.0) {
+	if (interp >= 1.0f) {
 		interpFlip = 1;
-	} else if (interp <= 0.0 && interpFlip != 0) {
+	} else if (interp <= 0.0f && interpFlip != 0) {
 		interpFlip = 0;
 	}
 
-	// Calculate current position of sparkle
-	sparkleCoord[0] = (1-sparkleInterp) * first_half_coords[0][0] + sparkleInterp * first_half_coords[1][0];
-	sparkleCoord[1] = (1-sparkleInterp) * first_half_coords[0][1] + sparkleInterp * first_half_coords[1][1];
+	// Calculate current position of sparkle by chosing which points it is currently between
+	// and where it should go next
+	switch(currentPoint) {
+		case 0:
+			goingToPoint = 1; //done
+			break;
+		case 1:
+			goingToPoint = 2; //done
+			break;
+		case 2:
+			goingToPoint = 11; //done
+			break;
+		case 3:
+			goingToPoint = 4; //uneeded
+			break;
+		case 4:
+			goingToPoint = 5; //Done
+			break;
+		case 5:
+			goingToPoint = 6; //Done
+			break;
+		case 6:
+			goingToPoint = 0; //Done
+			break;
+
+		// Second half
+		case 7:
+			goingToPoint = 8; //done
+			break;
+		case 8:
+			goingToPoint = 9; //Done
+			break;
+		case 9:
+			goingToPoint = 4; //Done
+			break;
+		case 10:
+			goingToPoint = 11; //uneeded
+			break;
+		case 11:
+			goingToPoint = 12; //done
+			break;
+		case 12:
+			goingToPoint = 13; //done
+			break;
+		case 13:
+			goingToPoint = 7; //done
+			break;
+		default:
+			break;
+	}
+
+	sparkleCoord[0] = (1-sparkleInterp) * first_half_coords[currentPoint][0] + sparkleInterp * first_half_coords[goingToPoint][0];
+	sparkleCoord[1] = (1-sparkleInterp) * first_half_coords[currentPoint][1] + sparkleInterp * first_half_coords[goingToPoint][1];
 
 	// now force OpenGL to redraw the change
 	glutPostRedisplay();
