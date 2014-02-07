@@ -168,6 +168,7 @@ void drawButtons(void) {
 	}
 }
 
+// This function draws the text for all four buttons
 void drawButtonText(void) {
 	glColor3f(1, 0, 1);
 	// Morph button
@@ -369,31 +370,8 @@ void mouseEventListener(int button, int state, int x, int y)
 
 }
 
-
-
-/************************************************************************
-
-	Function:		display
-
-	Description:	Draws initial static openGL. Sets up buttons, letter N and menu area
-
-*************************************************************************/
-void display(void)
-{
-
-	// clear the screen
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	if(!morphButtonPressed) {
-		drawLetter();
-	}
-
-	// Always draw base buttons, but draw over if one is pressed
-	drawButtons();
-
-	// Draw text for buttons
-	drawButtonText();
-
+// This checks if a mouse button was pressed and does logic based on its location
+void mouseCheck(void) {
 	// if we have a mouse position
 	if (mousePressed)
 	{
@@ -442,8 +420,11 @@ void display(void)
 			bonusButtonPressed = 1;
 		}
 	}
+}
 
-	// Draw letter if morph button is pressed and change button
+// This performs button stuff depending on if a button is pressed or not
+void buttonLogic(void) {
+		// Draw letter if morph button is pressed and change button
 	if(morphButtonPressed) {
 		// Change button color
 
@@ -471,6 +452,37 @@ void display(void)
 		// Morph letter
 		drawStar();
 	}
+}
+
+
+/************************************************************************
+
+	Function:		display
+
+	Description:	Draws initial static openGL. Sets up buttons, letter N and menu area
+
+*************************************************************************/
+void display(void)
+{
+
+	// clear the screen
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if(!morphButtonPressed) {
+		drawLetter();
+	}
+
+	// Always draw base buttons, but draw over if one is pressed
+	drawButtons();
+
+	// Draw text for buttons
+	drawButtonText();
+
+	// Checks if mouse is pressed
+	mouseCheck();
+
+	// Performs button operations depending on mouse position
+	buttonLogic();
 
 	// send all output to display
 	glutSwapBuffers();
