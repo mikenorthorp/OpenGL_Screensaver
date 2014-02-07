@@ -15,6 +15,10 @@
 #include <GL\freeglut.h>
 
 /* Global variables */
+
+// Interporlation variable
+float interp = 0.0;
+
 typedef float x_y_coord[2];
 
 // Coordinates for right and left side of N
@@ -118,21 +122,69 @@ void drawLetter(void) {
 		glColor3f(1, 0, 0);
 		// First part of triangle fan
 		for(i=0; i<7; i++) {
-			glVertex2f(left_half_n[i][0], left_half_n[i][1]);
+			switch(i) 
+			{
+				case 1:
+					glVertex2f((1-interp) * left_half_n[i][0] + interp * left_half_star[2][0], (1-interp) * left_half_n[i][1] + interp * left_half_star[2][1]);
+					break;
+				case 2:
+					glVertex2f((1-interp) * left_half_n[i][0] + interp * left_half_star[1][0], (1-interp) * left_half_n[i][1] + interp * left_half_star[1][1]);
+					break;
+				case 3:
+					glVertex2f((1-interp) * left_half_n[i][0] + interp * left_half_star[6][0], (1-interp) * left_half_n[i][1] + interp * left_half_star[6][1]);
+					break;
+				case 4:
+					glVertex2f((1-interp) * left_half_n[i][0] + interp * left_half_star[5][0], (1-interp) * left_half_n[i][1] + interp * left_half_star[5][1]);
+					break;
+				case 5:
+					glVertex2f((1-interp) * left_half_n[i][0] + interp * left_half_star[4][0], (1-interp) * left_half_n[i][1] + interp * left_half_star[4][1]);
+					break;
+				case 6:
+					glVertex2f((1-interp) * left_half_n[i][0] + interp * left_half_star[3][0], (1-interp) * left_half_n[i][1] + interp * left_half_star[3][1]);
+					break;
+				case 7:
+					glVertex2f((1-interp) * left_half_n[i][0] + interp * left_half_star[3][0], (1-interp) * left_half_n[i][1] + interp * left_half_star[3][1]);
+					break;
+				default :
+					break;
+			}
 		}
 	glEnd();
 
+	/*
 	// Second half of N
 	glBegin(GL_TRIANGLE_FAN);
 		// Set color to RED
 		glColor3f(1, 0, 0);
 		// First part of triangle fan
 		for(i=0; i<7; i++) {
-			glVertex2f(right_half_n[i][0], right_half_n[i][1]);
+			if(i == 7) {
+				glVertex2f((1-interp) * right_half_n[i][0] + interp * right_half_star[6][0], (1-interp) * right_half_n[i][1] + interp * right_half_star[6][1]);
+			} else {
+				glVertex2f((1-interp) * right_half_n[i][0] + interp * right_half_star[i][0], (1-interp) * right_half_n[i][1] + interp * right_half_star[i][1]);
+			}
 		}
 	glEnd();
+	*/
 
 }
+
+// Runs when program is idle
+void myIdle(void)
+{
+
+	// update the interpolation variable 
+	interp += 0.00005;
+
+
+	if (interp >= 1.0) {
+		interp = 0.0;
+	}
+
+	// now force OpenGL to redraw the change
+	glutPostRedisplay();
+}
+
 
 /************************************************************************
 
@@ -144,8 +196,8 @@ void drawLetter(void) {
 void display(void)
 {
 
-	//drawLetter();
-	drawStar();
+	drawLetter();
+	//drawStar();
 
 	// send all output to display
 	glFlush();
@@ -174,6 +226,8 @@ void main(int argc, char** argv)
 	glutCreateWindow("Screensaver");
 	// register redraw function
 	glutDisplayFunc(display);
+	// register the idle function
+	glutIdleFunc(myIdle);     
 	//initialize the rendering context
 	init();
 	// go into a perpetual loop
