@@ -52,6 +52,10 @@ x_y_coord sparkleCoord = {0.0f, 0.0f};
 int currentPoint = 0;
 int goingToPoint = 1;
 
+// Scale to grow and shrink
+float scale = 0.0f;
+int scaleFlip = 0;
+
 x_y_coord morphingCoords[] = {{0.0f, 0.0f}, {0.0f, 0.0f}};
 x_y_coord nonMorphingCoords[] = {{0.0f, 0.0f}, {0.0f, 0.0f}};
 
@@ -150,47 +154,68 @@ void drawSparkle(void) {
 	// Set the color to yellow
 	glColor3f(1, 1, 0);
 
+	// Enable blending
+	glEnable(GL_BLEND);
+	// Set blending mode
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	// The position of the current center to the sparkleCoord
 	glTranslatef(sparkleCoord[0], sparkleCoord[1], 0.0);
 	// Rotate along Z
 	glRotatef(theta, 0.0, 0.0, 1.0);
 	glBegin(GL_LINES);
-		glVertex3f(-0.1, 0.0, 0.0);
+		glColor4f(1.0, 1.0, 0, 0.0);
+		glVertex3f(-0.1*scale, 0.0*scale, 0.0);
+		glColor4f(1.0, 1.0, 0, 1.0);
 		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(0.1, 0.0, 0.0);
+		glColor4f(1.0, 1.0, 0, 0.0);
+		glVertex3f(0.1*scale, 0.0*scale, 0.0);
+		glColor4f(1.0, 1.0, 0, 1.0);
 		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(0.0, 0.1, 0.0);
+		glColor4f(1.0, 1.0, 0, 0.0);
+		glVertex3f(0.0*scale, 0.1*scale, 0.0);
+		glColor4f(1.0, 1.0, 0, 1.0);
 		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(0.0, -0.1, 0.0);
+		glColor4f(1.0, 1.0, 0, 0.0);
+		glVertex3f(0.0*scale, -0.1*scale, 0.0);
+		glColor4f(1.0, 1.0, 0, 1.0);
 		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(-0.05, -0.05, 0.0);
+		glColor4f(1.0, 1.0, 0, 0.0);
+		glVertex3f(-0.05*scale, -0.05*scale, 0.0);
+		glColor4f(1.0, 1.0, 0, 1.0);
 		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(0.05, 0.05, 0.0);
+		glColor4f(1.0, 1.0, 0, 0.0);
+		glVertex3f(0.05*scale, 0.05*scale, 0.0);
+		glColor4f(1.0, 1.0, 0, 1.0);
 		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(-0.05, 0.05, 0.0);
+		glColor4f(1.0, 1.0, 0, 0.0);
+		glVertex3f(-0.05*scale, 0.05*scale, 0.0);
+		glColor4f(1.0, 1.0, 0, 1.0);
 		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(0.05, -0.05, 0.0);
+		glColor4f(1.0, 1.0, 0, 0.0);
+		glVertex3f(0.05*scale, -0.05*scale, 0.0);
+		glColor4f(1.0, 1.0, 0, 1.0);
 		glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
@@ -206,7 +231,7 @@ void drawButtons(void) {
 	for(i=0;i<4;i++) {
 		// Begin button drawing
 		glBegin(GL_POLYGON);
-			// Set color to RED
+			// Set color to Blue as default
 			glColor3f(0, 0, 1);
 
 
@@ -235,16 +260,14 @@ void drawButtons(void) {
 			glVertex2f(buttons[i][0]+buttonWidth, buttons[i][1]);
 			glVertex2f(buttons[i][0]+buttonWidth, buttons[i][1]-buttonHeight);
 			glVertex2f(buttons[i][0], buttons[i][1]-buttonHeight);
-
-			// Set color to blue
-			glColor3f(0, 1, 1);
 		glEnd();
 	}
 }
 
 // This function draws the text for all four buttons
 void drawButtonText(void) {
-	glColor3f(1, 0, 1);
+	// Set color to yellow
+	glColor3f(1, 1, 0);
 	// Morph button
 	glRasterPos3f(buttons[0][0]+0.02f , buttons[0][1]-0.12f ,0.0f);
 	glutBitmapString( GLUT_BITMAP_HELVETICA_18 , "MORPH" );
@@ -405,6 +428,20 @@ void morphLetter(void) {
 // Runs when program is idle
 void myIdle(void)
 {
+
+	// update the interpolation variable depending on value of the flip variable
+	if (scaleFlip == 0) {
+		scale += 0.005f;
+	} else if (scaleFlip == 1) {
+		scale -= 0.005f;
+	}
+
+	// Flips the interp to subtract or add, depending on the part of the morph it is in
+	if (scale >= 1.5) {
+		scaleFlip = 1;
+	} else if (scale <= 0.7 && scaleFlip != 0) {
+		scaleFlip = 0;
+	}
 
 	// update the angle of rotation
 	theta += 2.0f;
