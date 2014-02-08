@@ -30,8 +30,9 @@ Installation
 Making the Program Do Things
 ----------------------------
 
-1. Click the buttons to see their effects.
-2. To exit the program just hit the exit button in the corner.
+1. Run the screensaver.exe found in the debug folder or run it in visual studio as a project
+2. Click the buttons to see their effects.
+3. To exit the program just hit the exit button in the corner.
 
 
 Citations
