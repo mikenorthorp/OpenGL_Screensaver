@@ -1,17 +1,40 @@
-﻿Build started 07/02/2014 6:32:20 PM.
+﻿Build started 07/02/2014 9:07:28 PM.
      1>Project "c:\Users\Mike\documents\visual studio 2012\Projects\ScreenSaver\ScreenSaver\ScreenSaver.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Users\Mike\Documents\glew-1.10.0\include" /IC:\Users\Mike\Documents\freeglut\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt screensaver.c
          screensaver.c
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(163): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(170): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(177): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(184): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(191): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(198): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(205): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(212): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(571): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(221): warning C4305: 'function' : truncation from 'double' to 'GLfloat'
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(238): warning C4305: 'function' : truncation from 'double' to 'GLfloat'
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(278): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(282): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(283): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(286): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(287): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(290): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(291): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(294): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(295): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(298): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(299): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(302): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(303): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(306): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(307): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(310): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(311): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(318): warning C4013: 'printf' undefined; assuming extern returning int
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(352): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(359): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(366): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(373): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(380): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(387): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(394): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(401): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(422): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(423): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(424): warning C4244: 'function' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\mike\documents\visual studio 2012\projects\screensaver\screensaver\screensaver.c(730): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"c:\users\mike\documents\visual studio 2012\Projects\ScreenSaver\Debug\ScreenSaver.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Mike\Documents\glew-1.10.0\lib\Release\Win32" /LIBPATH:C:\Users\Mike\Documents\freeglut\lib freeglut.lib glew32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"c:\users\mike\documents\visual studio 2012\Projects\ScreenSaver\Debug\ScreenSaver.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"c:\users\mike\documents\visual studio 2012\Projects\ScreenSaver\Debug\ScreenSaver.lib" /MACHINE:X86 Debug\screensaver.obj
          ScreenSaver.vcxproj -> c:\users\mike\documents\visual studio 2012\Projects\ScreenSaver\Debug\ScreenSaver.exe
@@ -19,4 +42,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.74
+Time Elapsed 00:00:00.87
